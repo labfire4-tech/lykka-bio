@@ -19,7 +19,6 @@ const DEMO_PROFILE: Profile = {
   bio: "Premium link-in-bio platform with unlimited customization",
   avatar: "https://cdn.discordapp.com/embed/avatars/0.png",
   theme: {
-    backgroundType: "color",
     backgroundColor: "#000000",
     textColor: "#ffffff",
     accentColor: "#ffffff",
@@ -37,46 +36,25 @@ export default function ProfileView() {
   const pathname = usePathname();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [views, setViews] = useState(0);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setLoaded(false);
-    const timer = setTimeout(() => setLoaded(true), 100);
-    
     if (pathname === "/demo") {
       setProfile(DEMO_PROFILE);
-      return () => clearTimeout(timer);
+    } else {
+      const saved = localStorage.getItem("lykka-profile");
+      if (saved) {
+        setProfile(JSON.parse(saved));
+      }
     }
-    
-    const saved = localStorage.getItem("lykka-profile");
-    if (saved) {
-      setProfile(JSON.parse(saved));
+
+    const targetUsername = pathname === "/demo" ? "demo" : JSON.parse(localStorage.getItem("lykka-profile") || "{}")?.username;
+    if (targetUsername) {
+      fetch(`https://api.counterapi.dev/v1/lykka-bio/${targetUsername}/up`)
+        .then(res => res.json())
+        .then(data => setViews(data.count || 0))
+        .catch(() => setViews(0));
     }
-    
-    return () => clearTimeout(timer);
   }, [pathname]);
-
-  useEffect(() => {
-    if (!profile) return;
-    fetch(`https://api.counterapi.dev/v1/lykka-bio/${profile.username}/up`)
-      .then(res => res.json())
-      .then(data => setViews(data.count || 0))
-      .catch(() => setViews(0));
-  }, [profile?.username]);
-
-  if (!loaded) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <motion.div
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-white/30"
-        >
-          Loading...
-        </motion.div>
-      </div>
-    );
-  }
 
   if (!profile) {
     return (
@@ -117,33 +95,28 @@ export default function ProfileView() {
       className="min-h-screen flex flex-col items-center justify-center p-6 relative"
       style={{ background: theme.backgroundColor }}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="flex flex-col items-center gap-10 max-w-sm w-full"
-      >
+      <div className="flex flex-col items-center gap-10 max-w-sm w-full">
         <motion.img
-          initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+          initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ duration: 0.8, type: "spring", stiffness: 100, delay: 0.2 }}
-          whileHover={{ scale: 1.1, rotate: 2 }}
+          transition={{ duration: 0.8, type: "spring" }}
+          whileHover={{ scale: 1.08, rotate: 3 }}
           src={profile.avatar || "https://via.placeholder.com/150"}
           alt={profile.displayName}
           className={`w-28 h-28 ${getRoundedClass()} border-2 object-cover`}
-          style={{ borderColor: theme.accentColor, boxShadow: `0 0 40px ${theme.accentColor}20` }}
+          style={{ borderColor: theme.accentColor, boxShadow: `0 0 40px ${theme.accentColor}30` }}
         />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
           className="text-center"
         >
           <motion.h1 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             className="text-4xl md:text-5xl font-black mb-3"
             style={{ color: theme.textColor }}
           >
@@ -153,7 +126,7 @@ export default function ProfileView() {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
               className="text-sm opacity-70 leading-relaxed"
               style={{ color: theme.textColor }}
             >
@@ -165,7 +138,7 @@ export default function ProfileView() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
           className="flex flex-wrap gap-4 justify-center"
         >
           {profile.socialLinks.map((link, idx) => (
@@ -175,7 +148,7 @@ export default function ProfileView() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ 
                 duration: 0.5, 
-                delay: 0.8 + idx * 0.1,
+                delay: 0.6 + idx * 0.1,
                 type: "spring",
                 stiffness: 150
               }}
@@ -185,7 +158,7 @@ export default function ProfileView() {
               whileHover={{ 
                 scale: 1.2, 
                 y: -8,
-                boxShadow: `0 15px 35px ${link.color || SOCIAL_COLORS[link.name] || "#fff"}40`
+                boxShadow: `0 15px 35px ${link.color || SOCIAL_COLORS[link.name] || "#fff"}50`
               }}
               whileTap={{ scale: 0.9 }}
               className="w-14 h-14 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/10 transition-all"
@@ -205,7 +178,7 @@ export default function ProfileView() {
           <i className="fas fa-eye text-xs opacity-60" />
           <span>{views.toLocaleString()} views</span>
         </motion.div>
-      </motion.div>
+      </div>
     </div>
   );
 }
