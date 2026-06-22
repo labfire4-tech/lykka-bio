@@ -14,45 +14,57 @@ interface Profile {
   music?: { url: string; title?: string; artist?: string };
 }
 
+const DEMO_PROFILE: Profile = {
+  username: "demo",
+  displayName: "LYKKA DEMO",
+  bio: "Premium link-in-bio platform with unlimited customization",
+  avatar: "https://cdn.discordapp.com/embed/avatars/0.png",
+  theme: {
+    backgroundColor: "#000000",
+    textColor: "#ffffff",
+    accentColor: "#ffffff",
+    rounded: "full",
+    animation: "fade"
+  },
+  socialLinks: [
+    { name: "Twitter", url: "https://twitter.com", icon: "fa-twitter", color: "#1da1f2" },
+    { name: "Instagram", url: "https://instagram.com", icon: "fa-instagram", color: "#e4405f" },
+    { name: "YouTube", url: "https://youtube.com", icon: "fa-youtube", color: "#ff0000" },
+    { name: "Discord", url: "https://discord.com", icon: "fa-discord", color: "#5865f2" },
+  ]
+};
+
 export default function ProfileView() {
   const pathname = usePathname();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [views, setViews] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
-    // Get profile from localStorage (client-side only)
-    const saved = localStorage.getItem("lykka-profile");
-    if (saved) {
-      setProfile(JSON.parse(saved));
+    if (pathname === "/demo") {
+      setProfile(DEMO_PROFILE);
+    } else {
+      const saved = localStorage.getItem("lykka-profile");
+      if (saved) {
+        setProfile(JSON.parse(saved));
+      }
     }
 
-    // View counter
-    if (profile?.username) {
-      fetch(`https://api.counterapi.dev/v1/lykka-bio/${profile.username}/up`)
+    const targetUsername = pathname === "/demo" ? "demo" : JSON.parse(localStorage.getItem("lykka-profile") || "{}")?.username;
+    if (targetUsername) {
+      fetch(`https://api.counterapi.dev/v1/lykka-bio/${targetUsername}/up`)
         .then(res => res.json())
         .then(data => setViews(data.count || 0))
         .catch(() => setViews(0));
     }
-  }, [profile?.username]);
-
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const formatTime = (seconds: number) => {
-    if (isNaN(seconds)) return "0:00";
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m}:${s < 10 ? '0' : ''}${s}`;
-  };
+  }, [pathname]);
 
   if (!profile) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-white">
-        <p>Profile not found. <a href="/customize" className="underline">Create one</a></p>
+        <div className="text-center">
+          <p className="mb-4 opacity-60">Profile not found</p>
+          <a href="/customize" className="text-white underline">Create one</a>
+        </div>
       </div>
     );
   }
@@ -61,51 +73,53 @@ export default function ProfileView() {
     backgroundColor: "#000000",
     textColor: "#ffffff",
     accentColor: "#ffffff",
-    rounded: "full",
-    animation: "fade"
+    rounded: "full"
   };
 
   const SOCIAL_COLORS: Record<string, string> = {
-    "Twitter": "#1da1f2",
-    "Instagram": "#e4405f",
-    "YouTube": "#ff0000",
-    "Twitch": "#6441a5",
-    "Discord": "#5865f2",
-    "GitHub": "#ffffff",
-    "TikTok": "#ffffff",
-    "LinkedIn": "#0077b5",
-    "Spotify": "#1db954",
-    "Steam": "#171a21",
+    "Twitter": "#1da1f2", "Instagram": "#e4405f", "YouTube": "#ff0000",
+    "Twitch": "#6441a5", "Discord": "#5865f2", "GitHub": "#ffffff",
+    "TikTok": "#ffffff", "LinkedIn": "#0077b5", "Spotify": "#1db954", "Steam": "#171a21",
+  };
+
+  const getRoundedClass = () => {
+    switch(theme.rounded) {
+      case "full": return "rounded-full";
+      case "lg": return "rounded-xl";
+      case "md": return "rounded-lg";
+      case "sm": return "rounded";
+      default: return "";
+    }
   };
 
   return (
     <div 
-      className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
+      className="min-h-screen flex flex-col items-center justify-center p-6 relative"
       style={{ background: theme.backgroundColor }}
     >
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="flex flex-col items-center gap-6 max-w-md w-full"
+        transition={{ duration: 0.6 }}
+        className="flex flex-col items-center gap-8 max-w-sm w-full"
       >
         <motion.img
           whileHover={{ scale: 1.05 }}
           src={profile.avatar || "https://via.placeholder.com/150"}
           alt={profile.displayName}
-          className={`w-24 h-24 rounded-${theme.rounded === "full" ? "full" : theme.rounded || "full"} border-2 object-cover`}
+          className={`w-24 h-24 ${getRoundedClass()} border-2 object-cover`}
           style={{ borderColor: theme.accentColor }}
         />
 
         <div className="text-center">
           <h1 
-            className="text-3xl font-bold mb-2"
+            className="text-3xl md:text-4xl font-bold mb-3"
             style={{ color: theme.textColor }}
           >
             {profile.displayName}
           </h1>
           {profile.bio && (
-            <p className="text-sm opacity-70" style={{ color: theme.textColor }}>
+            <p className="text-sm opacity-70 leading-relaxed" style={{ color: theme.textColor }}>
               {profile.bio}
             </p>
           )}
@@ -118,43 +132,21 @@ export default function ProfileView() {
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.1, y: -2 }}
-              className={`w-12 h-12 flex items-center justify-center rounded-full glass-panel transition-all`}
+              whileHover={{ scale: 1.15, y: -3 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/10 transition-all"
               style={{ color: link.color || SOCIAL_COLORS[link.name] || theme.textColor }}
             >
-              <i className={`fab fa-${link.icon.replace("fa-", "")} text-lg`} />
+              <i className={`fab ${link.icon.replace("fa-", "")} text-lg`} />
             </motion.a>
           ))}
         </div>
 
-        <div className="glass-panel px-4 py-2 rounded-full flex items-center gap-2">
-          <i className="fas fa-eye" />
-          <span>{views.toLocaleString()}</span>
+        <div className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full text-sm">
+          <i className="fas fa-eye text-xs opacity-60" />
+          <span>{views.toLocaleString()} views</span>
         </div>
       </motion.div>
-
-      {profile.music?.url && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 glass-panel px-6 py-4 rounded-full flex items-center gap-4 min-w-[300px]">
-          <button 
-            onClick={togglePlay}
-            className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"
-          >
-            <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'}`} />
-          </button>
-          <div className="flex-1">
-            <div className="flex justify-between text-xs mb-1">
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(duration)}</span>
-            </div>
-            <div className="h-1 bg-white/20 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-white transition-all"
-                style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

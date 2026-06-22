@@ -6,9 +6,9 @@ import { SOCIAL_PLATFORMS, ThemeConfig, THEMES } from "../lib/config";
 
 export default function CustomizePage() {
   const router = useRouter();
-  const [username, setUsername] = useState("yourname");
-  const [displayName, setDisplayName] = useState("YOUR NAME");
-  const [bio, setBio] = useState("Your bio here...");
+  const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [bio, setBio] = useState("");
   const [avatar, setAvatar] = useState("");
   const [selectedTheme, setSelectedTheme] = useState<ThemeConfig>(THEMES[0]);
   const [socialLinks, setSocialLinks] = useState<Array<{name: string, url: string, icon: string}>>([]);
@@ -28,9 +28,10 @@ export default function CustomizePage() {
   };
 
   const saveProfile = () => {
+    if (!username) return;
     const profileData = {
       username,
-      displayName,
+      displayName: displayName || username,
       bio,
       avatar,
       theme: selectedTheme,
@@ -41,82 +42,86 @@ export default function CustomizePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-center">Customize Your Profile</h1>
+    <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
+      <div className="w-full max-w-2xl">
+        <h1 className="text-3xl font-bold mb-2 text-center">Create Your Profile</h1>
+        <p className="text-center opacity-60 mb-10">Fill in your details below</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left: Editor */}
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium mb-2">Username</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:border-white focus:outline-none"
-                placeholder="yourname"
-              />
-            </div>
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium mb-2 opacity-80">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition"
+              placeholder="yourname"
+            />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Display Name</label>
-              <input
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:border-white focus:outline-none"
-                placeholder="YOUR NAME"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 opacity-80">Display Name</label>
+            <input
+              type="text"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition"
+              placeholder="Your Display Name"
+            />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Bio</label>
-              <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:border-white focus:outline-none resize-none"
-                placeholder="Your bio here..."
-                rows={3}
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 opacity-80">Bio</label>
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none resize-none transition"
+              placeholder="Tell people about yourself..."
+              rows={3}
+            />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Avatar URL</label>
-              <input
-                type="url"
-                value={avatar}
-                onChange={(e) => setAvatar(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:border-white focus:outline-none"
-                placeholder="https://..."
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 opacity-80">Avatar URL</label>
+            <input
+              type="url"
+              value={avatar}
+              onChange={(e) => setAvatar(e.target.value)}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition"
+              placeholder="https://..."
+            />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Theme</label>
-              <div className="grid grid-cols-2 gap-3">
-                {THEMES.map((theme) => (
-                  <button
-                    key={theme.id}
-                    onClick={() => setSelectedTheme(theme)}
-                    className={`p-4 rounded-lg border transition-all ${selectedTheme.id === theme.id ? 'border-white' : 'border-gray-700'}`}
-                  >
-                    <div
-                      className="w-full h-16 rounded mb-2"
-                      style={{ 
-                        background: theme.backgroundType === "gradient" ? theme.backgroundColor : theme.backgroundColor 
-                      }}
-                    />
-                    <span className="text-sm">{theme.name}</span>
-                  </button>
-                ))}
-              </div>
+          <div>
+            <label className="block text-sm font-medium mb-3 opacity-80">Theme</label>
+            <div className="grid grid-cols-2 gap-3">
+              {THEMES.map((theme) => (
+                <button
+                  key={theme.id}
+                  onClick={() => setSelectedTheme(theme)}
+                  className={`p-4 rounded-xl border transition-all ${
+                    selectedTheme.id === theme.id ? 'border-white bg-white/5' : 'border-white/10 hover:border-white/30'
+                  }`}
+                >
+                  <div
+                    className="w-full h-16 rounded-lg mb-2"
+                    style={{ 
+                      background: theme.backgroundType === "gradient" 
+                        ? theme.backgroundColor 
+                        : theme.backgroundColor 
+                    }}
+                  />
+                  <span className="text-sm block">{theme.name}</span>
+                </button>
+              ))}
             </div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Social Links</label>
+          <div>
+            <label className="block text-sm font-medium mb-3 opacity-80">Social Links</label>
+            <div className="space-y-3">
               {socialLinks.map((link, index) => (
-                <div key={index} className="flex gap-2 mb-2">
+                <div key={index} className="flex gap-2">
                   <select
                     value={link.name}
                     onChange={(e) => {
@@ -124,9 +129,9 @@ export default function CustomizePage() {
                       updateSocialLink(index, "name", e.target.value);
                       if (platform) updateSocialLink(index, "icon", platform.icon);
                     }}
-                    className="px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg"
+                    className="px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg focus:border-white transition"
                   >
-                    <option value="">Select Platform</option>
+                    <option value="">Select</option>
                     {SOCIAL_PLATFORMS.map(p => (
                       <option key={p.name} value={p.name}>{p.name}</option>
                     ))}
@@ -136,11 +141,11 @@ export default function CustomizePage() {
                     value={link.url}
                     onChange={(e) => updateSocialLink(index, "url", e.target.value)}
                     placeholder="https://..."
-                    className="flex-1 px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg"
+                    className="flex-1 px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg focus:border-white transition"
                   />
                   <button
                     onClick={() => removeSocialLink(index)}
-                    className="px-3 py-2 bg-red-900 rounded-lg hover:bg-red-800"
+                    className="px-4 py-2.5 bg-red-500/20 rounded-lg hover:bg-red-500/30 transition"
                   >
                     ×
                   </button>
@@ -148,40 +153,20 @@ export default function CustomizePage() {
               ))}
               <button
                 onClick={addSocialLink}
-                className="mt-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20"
+                className="w-full py-2.5 border border-white/20 rounded-lg hover:bg-white/5 transition"
               >
                 + Add Social Link
               </button>
             </div>
-
-            <button
-              onClick={saveProfile}
-              className="w-full py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition"
-            >
-              Save Profile
-            </button>
           </div>
 
-          {/* Right: Preview */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold">Preview</h2>
-            <div className="glass-panel p-6 rounded-lg flex flex-col items-center">
-              {avatar ? (
-                <img src={avatar} alt="avatar" className="w-20 h-20 rounded-full mb-4" />
-              ) : (
-                <div className="w-20 h-20 rounded-full bg-gray-700 mb-4" />
-              )}
-              <h3 className="text-xl font-bold mb-2">{displayName || "YOUR NAME"}</h3>
-              <p className="text-sm opacity-70 text-center mb-4">{bio || "Your bio here..."}</p>
-              <div className="flex gap-3">
-                {socialLinks.map((link, i) => (
-                  <div key={i} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                    <i className={`fab ${link.icon.replace("fa-", "")}`} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <button
+            onClick={saveProfile}
+            disabled={!username}
+            className="w-full py-3.5 bg-white text-black font-bold rounded-lg text-lg uppercase tracking-wider hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Create Profile
+          </button>
         </div>
       </div>
     </div>
