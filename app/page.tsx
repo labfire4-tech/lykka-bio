@@ -1,80 +1,114 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, animate } from "framer-motion";
 
 export default function HomePage() {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  
+  useEffect(() => {
+    const handleMouseMove = ({ currentTarget, clientX, clientY }: any) => {
+      const { left, top } = currentTarget.getBoundingClientRect();
+      mouseX.set(clientX - left);
+      mouseY.set(clientY - top);
+    };
+    
+    const hero = document.getElementById("hero");
+    if (hero) {
+      hero.addEventListener("mousemove", handleMouseMove);
+    }
+    
+    return () => {
+      if (hero) hero.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden relative">
-      <div className="absolute inset-0 bg-black z-[-1]" />
-      
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        className="min-h-screen flex flex-col items-center justify-center px-6"
-      >
-        <div className="text-center max-w-4xl mx-auto">
-          <motion.h1
-            initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 0.8 }}
-            className="text-6xl md:text-8xl font-bold mb-4 tracking-wider"
-            style={{ letterSpacing: "0.1em" }}
-          >
-            LYKKA BIO
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg md:text-xl opacity-60 mb-16 tracking-wide max-w-2xl mx-auto"
-          >
-            Create your perfect link-in-bio page in seconds. Beautiful, fast, and customizable.
-          </motion.p>
+    <div className="min-h-screen bg-black text-white overflow-hidden">
+      <div id="hero" className="relative min-h-screen flex items-center justify-center">
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          style={{
+            background: useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.1), transparent 40%)`
+          }}
+        />
 
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-6 justify-center"
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            <Link
-              href="/customize"
-              className="group relative px-10 py-4 bg-white text-black font-bold rounded-full text-lg uppercase tracking-wider overflow-hidden"
+            <motion.h1
+              className="text-7xl md:text-9xl font-black tracking-tighter mb-6"
+              style={{ letterSpacing: "-0.05em" }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2, type: "spring", stiffness: 100 }}
             >
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                Get Started
-              </span>
-              <motion.div 
-                className="absolute inset-0 bg-gray-200"
-                initial={{ y: "100%" }}
-                whileHover={{ y: 0 }}
-                transition={{ duration: 0.3 }}
-              />
-            </Link>
-            
-            <a
-              href="https://github.com/labfire4-tech/lykka-bio"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-10 py-4 border border-white/20 rounded-full text-lg uppercase tracking-wider hover:bg-white/10 transition"
-            >
-              GitHub
-            </a>
-          </motion.div>
+              <span className="block">LYKKA</span>
+              <span className="block text-white/70">BIO</span>
+            </motion.h1>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.8 }}
-            className="mt-20 text-xs opacity-40"
-          >
-            No sign up required. Just customize and share.
+            <motion.p
+              className="text-lg md:text-xl opacity-60 mb-12 max-w-lg mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+            >
+              Create your perfect link-in-bio page in seconds. Beautiful, fast, and customizable.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="flex flex-col sm:flex-row gap-5 justify-center items-center"
+            >
+              <Link
+                href="/customize"
+                className="group relative px-12 py-4 bg-white text-black font-black rounded-full text-sm uppercase tracking-widest overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center justify-center gap-3 transition-transform group-hover:gap-4">
+                  Get Started
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </span>
+                <motion.span
+                  className="absolute inset-0 bg-gradient-to-r from-gray-100 via-white to-gray-200"
+                  initial={{ x: "100%" }}
+                  whileHover={{ x: "0%" }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                />
+              </Link>
+
+              <Link
+                href="/demo"
+                className="px-12 py-4 border border-white/20 rounded-full text-sm uppercase tracking-widest hover:bg-white/5 transition-all"
+              >
+                View Demo
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
-      </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+        >
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-xs opacity-40 uppercase tracking-widest">Scroll</span>
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              className="w-px h-10 bg-white/30"
+            />
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }
