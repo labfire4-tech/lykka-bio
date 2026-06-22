@@ -3,3 +3,4 @@ node_modules
 .git
 .env.local
 .env.production
+.vercel

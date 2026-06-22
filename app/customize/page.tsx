@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SOCIAL_PLATFORMS, ThemeConfig, THEMES } from "@/lib/config";
+import { SOCIAL_PLATFORMS, ThemeConfig, THEMES } from "../lib/config";
 
 export default function CustomizePage() {
   const router = useRouter();
