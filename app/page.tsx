@@ -1,25 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function HomePage() {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative overflow-hidden">
-      <div 
-        className="absolute inset-0 opacity-10"
-        style={{
-          background: useMotionTemplate`radial-gradient(800px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.2), transparent 40%)`
-        }}
-        onMouseMove={(e) => {
-          const rect = e.currentTarget.getBoundingClientRect();
-          mouseX.set(e.clientX - rect.left);
-          mouseY.set(e.clientY - rect.top);
-        }}
-      />
+      <div className="absolute -top-40 -left-40 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
