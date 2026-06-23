@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 
-import LivePreview from '@/app/components/effects/LivePreview';
-import ParticleEffect from '@/app/components/effects/ParticleEffect';
+import { LivePreview } from '@/app/components/effects/LivePreview';
+import { ParticleEffect } from '@/app/components/effects/ParticleEffect';
 import { GlassPanel } from '@/app/components/effects/GlassPanel';
 
 export default function DashboardPage() {
