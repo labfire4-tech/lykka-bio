@@ -1,16 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
-export default function SignupForm() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({ username: "", password: "", confirmPassword: "" });
+  const [error, setError] = useState("");
 
   const updateField = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -18,90 +15,101 @@ export default function SignupForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) return;
+    if (formData.password !== formData.confirmPassword) {
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    window.location.href = "/customize";
+    setError("");
+
+    try {
+      await fetch("/api/auth");
+      localStorage.setItem("lykka-user", JSON.stringify({ username: formData.username, loggedIn: true }));
+      window.location.href = "/dashboard";
+    } catch {
+      setError("Connexion failed. Try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="space-y-6"
-    >
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-black">Create Account</h2>
-        <p className="text-sm opacity-60">Start building your brand</p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-xs uppercase tracking-widest mb-2 opacity-60">Username</label>
-          <input
-            type="text"
-            value={formData.username}
-            onChange={(e) => updateField("username", e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
-            placeholder="yourname"
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500/50 transition-all"
-            required
-          />
+    <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-[440px] space-y-8"
+      >
+        <div className="flex justify-center">
+          <h1 className="text-4xl font-black tracking-tight">LYKKA<span className="text-purple-500">.</span>BIO</h1>
         </div>
 
-        <div>
-          <label className="block text-xs uppercase tracking-widest mb-2 opacity-60">Email</label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => updateField("email", e.target.value)}
-            placeholder="you@example.com"
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500/50 transition-all"
-            required
-          />
+        <div className="space-y-2 text-center">
+          <h2 className="text-[22px] font-black">Créer ton compte</h2>
+          <p className="text-sm text-white/50">Crée ton profil, partage tes liens et personnalise tout au même endroit.</p>
         </div>
 
-        <div>
-          <label className="block text-xs uppercase tracking-widest mb-2 opacity-60">Password</label>
-          <input
-            type="password"
-            value={formData.password}
-            onChange={(e) => updateField("password", e.target.value)}
-            placeholder="••••••••"
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500/50 transition-all"
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <label className="text-xs text-white/60">Nom d'utilisateur</label>
+            <input
+              type="text"
+              value={formData.username}
+              onChange={(e) => updateField("username", e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+              placeholder="guns.lol/nom d'utilisateur"
+              className="w-full px-4 py-3.5 bg-white/[0.04] border border-white/10 rounded-2xl text-sm focus:outline-none focus:border-purple-500/40 transition-all placeholder:text-white/25"
+              required
+            />
+          </div>
 
-        <div>
-          <label className="block text-xs uppercase tracking-widest mb-2 opacity-60">Confirm Password</label>
-          <input
-            type="password"
-            value={formData.confirmPassword}
-            onChange={(e) => updateField("confirmPassword", e.target.value)}
-            placeholder="••••••••"
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-500/50 transition-all"
-            required
-          />
-        </div>
+          <div className="space-y-1.5">
+            <label className="text-xs text-white/60">Mot de passe</label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => updateField("password", e.target.value)}
+              placeholder="••••••••"
+              className="w-full px-4 py-3.5 bg-white/[0.04] border border-white/10 rounded-2xl text-sm focus:outline-none focus:border-purple-500/40 transition-all placeholder:text-white/25"
+              required
+              minLength={6}
+            />
+          </div>
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          type="submit"
-          disabled={isLoading}
-          className="w-full py-3.5 bg-white text-black font-black rounded-xl uppercase tracking-wider disabled:opacity-50 transition-all"
-        >
-          {isLoading ? "Creating..." : "Create Account"}
-        </motion.button>
-      </form>
+          <div className="space-y-1.5">
+            <label className="text-xs text-white/60">Confirmer le mot de passe</label>
+            <input
+              type="password"
+              value={formData.confirmPassword}
+              onChange={(e) => updateField("confirmPassword", e.target.value)}
+              placeholder="••••••••"
+              className="w-full px-4 py-3.5 bg-white/[0.04] border border-white/10 rounded-2xl text-sm focus:outline-none focus:border-purple-500/40 transition-all placeholder:text-white/25"
+              required
+              minLength={6}
+            />
+          </div>
 
-      <p className="text-center text-sm opacity-60">
-        Already have an account?{" "}
-        <a href="/login" className="text-white hover:underline font-medium">
-          Sign in
-        </a>
-      </p>
-    </motion.div>
+          {error && (
+            <p className="text-xs text-red-400 text-center">{error}</p>
+          )}
+
+          <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-4 bg-purple-700 hover:bg-purple-600 disabled:bg-purple-900/50 text-white font-bold rounded-2xl transition-all"
+          >
+            {isLoading ? "Création..." : "Continuer"}
+          </motion.button>
+        </form>
+
+        <p className="text-center text-sm text-white/40">
+          Tu as déjà un compte ?{" "}
+          <Link href="/login" className="text-purple-400 hover:text-purple-300 font-medium transition-colors">
+            Se connecter
+          </Link>
+        </p>
+      </motion.div>
+    </div>
   );
 }
