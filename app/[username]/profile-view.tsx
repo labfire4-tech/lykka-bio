@@ -1,41 +1,8 @@
-"use client;
+"use client";
 
-import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
-
-// Liquid shadow effect for buttons and interactive elements
-const liquidShadow = (color: string) => ({
-  shadow: `0 4px 12px rgba(${hexToRgb(color)}, 0.3), 
-           0 0 25px rgba(${hexToRgb(color)}, 0.2),
-           0 0 50px rgba(${hexToRgb(color)}, 0.15)`,
-});
-
-const hexToRgb = (hex: string) =>
-  hex.length === 4
-    ? hex
-        .split('')
-        .map((x) => x + x)
-        .join('')
-        .match(/.{2}/g)!
-        .map((x) => parseInt(x, 16))
-        .map((x) => x / 255 * 255)
-        .reverse()
-        .join(',')
-        .replace(/^0x/, '')
-        .split(',')
-        .slice(0, 3)
-        .join(',')
-    : hex
-      .match(/.{2}/g)!
-      .map((x) => parseInt(x, 16))
-      .map((x) => x / 255 * 255)
-      .reverse()
-      .join(',')
-      .replace(/^0x/, '')
-      .split(',')
-      .slice(0, 3)
-      .join(',');
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 
 interface Profile {
   username: string;
@@ -52,30 +19,37 @@ interface Profile {
 }
 
 const DEMO_PROFILE: Profile = {
-  username: 'gamer',
-  displayName: 'AZRAEL',
-  bio: 'Digital creator',
-  avatar: 'https://i.pravatar.cc/150?u=gamer',
-  theme: { backgroundColor: '#111', textColor: '#fff', accentColor: '#a855f7', rounded: 'full' },
+  username: "gamer",
+  displayName: "AZRAEL",
+  bio: "Digital creator • Gamer • Streamer",
+  avatar: "https://i.pravatar.cc/150?u=gamer",
+  theme: { 
+    backgroundColor: "#000000", 
+    textColor: "#ffffff", 
+    accentColor: "#a855f7", 
+    rounded: "full" 
+  },
   socialLinks: [
-    { name: 'Twitter', url: 'https://twitter.com', icon: 'fa-twitter', color: '#1da1f2' },
-    { name: 'Instagram', url: 'https://instagram.com', icon: 'fa-instagram', color: '#e4405f' },
-    { name: 'YouTube', url: 'https://youtube.com', icon: 'fa-youtube', color: '#ff0000' },
-    { name: 'Discord', url: 'https://discord.com', icon: 'fa-discord', color: '#5865f2' },
+    { name: "Twitter", url: "https://twitter.com", icon: "fa-twitter", color: "#1da1f2" },
+    { name: "Instagram", url: "https://instagram.com", icon: "fa-instagram", color: "#e4405f" },
+    { name: "YouTube", url: "https://youtube.com", icon: "fa-youtube", color: "#ff0000" },
+    { name: "Discord", url: "https://discord.com", icon: "fa-discord", color: "#5865f2" },
+    { name: "GitHub", url: "https://github.com", icon: "fa-github", color: "#ffffff" },
+    { name: "Spotify", url: "https://spotify.com", icon: "fa-spotify", color: "#1db954" },
   ],
 };
 
 const COLORS: Record<string, string> = {
-  Twitter: '#1da1f2',
-  Instagram: '#e4405f',
-  YouTube: '#ff0000',
-  Twitch: '#6441a5',
-  Discord: '#5865f2',
-  GitHub: '#ffffff',
-  TikTok: '#ffffff',
-  LinkedIn: '#0077b5',
-  Spotify: '#1db954',
-  Steam: '#171a21',
+  Twitter: "#1da1f2",
+  Instagram: "#e4405f",
+  YouTube: "#ff0000",
+  Twitch: "#6441a5",
+  Discord: "#5865f2",
+  GitHub: "#ffffff",
+  TikTok: "#ffffff",
+  LinkedIn: "#0077b5",
+  Spotify: "#1db954",
+  Steam: "#171a21",
 };
 
 export default function ProfileView() {
@@ -84,10 +58,10 @@ export default function ProfileView() {
   const [views, setViews] = useState(0);
 
   useEffect(() => {
-    if (pathname === '/demo') {
+    if (pathname === "/demo") {
       setProfile(DEMO_PROFILE);
     } else {
-      const saved = localStorage.getItem('lykka-profile');
+      const saved = localStorage.getItem("lykka-profile");
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -107,11 +81,14 @@ export default function ProfileView() {
 
   if (!profile) {
     return (
-      <div className='min-h-screen bg-black text-white flex items-center justify-center py-12 px-6 font-sans' style={{ backdropFilter: 'blur(10px)' }}>
-        <div className='text-center'>
-          <h1 className='text-2xl md:text-3xl font-bold tracking-wide'>Profile not found</h1>
-          <p className='text-white/60 mt-3'>Create a profile to showcase your style</p>
-          <a href='/customize' className='mt-6 inline-block rounded-full bg-purple-600 text-white px-8 py-3 transition-all destroy-hover hover:bg-purple-700 shadow-[0_10px_25px_rgba(168,85,247,0.4)]'>
+      <div className="min-h-screen flex items-center justify-center bg-black text-white font-sans">
+        <div className="text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">Profile Not Found</h1>
+          <p className="text-white/60 mb-6">Create your premium profile today</p>
+          <a 
+            href="/customize" 
+            className="inline-block px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-full transition-all duration-300"
+          >
             Create One
           </a>
         </div>
@@ -119,138 +96,140 @@ export default function ProfileView() {
     );
   }
 
-  const theme = profile.theme || { backgroundColor: '#111', textColor: '#fff', accentColor: '#a855f7', rounded: 'full' };
-  const accentColorRgb = theme.accentColor.match(/\w+/g) ? theme.accentColor : '#a855f7';
+  const theme = profile.theme || { backgroundColor: "#000", textColor: "#fff", accentColor: "#a855f7", rounded: "full" };
 
   return (
-    <div className='min-h-screen bg-black text-white relative overflow-hidden' style={{ background: theme.backgroundColor || '#111' }}>
-      {/* Glass background with CRT overlay */}
-      <div className='absolute inset-0 pointer-events-none opacity-15'>
-        <canvas className='fixed inset-0 pointer-events-none' />
+    <div 
+      className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden"
+      style={{ background: theme.backgroundColor || "#000" }}
+    >
+      {/* CRT Scanlines */}
+      <div className="fixed inset-0 pointer-events-none opacity-20">
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px)"
+          }}
+        />
       </div>
-      
-      {/* Custom cursor */}
-      <div className='absolute inset-0 pointer-events-none'>
-        <div className='fixed w-[32px] h-[32px] rounded-full bg-purple-600/20 border-2 border-purple-400/30 translate-negative-50 -translate-x-50 -translate-y-50 pointer-events-auto animate-pulse-glow'></div>
-      </div>
-      
-      {/* Profile container */}
-      <div className='relative max-w-4xl mx-auto p-6' style={{ backdropFilter: 'blur(24px)', backgroundColor: 'rgba(0,0,0,0.6)' }}>
-        {/* Neon accent lines */}
-        <div className='pointer-events-none mb-12 opacity-50'>
-          <motion.div className='absolute top-0 left-0 h-8 w-12 rounded-full bg-accentColor/30' animate={{ x: [0, 100, 200] }} transition={{ duration: 3, repeat: Infinity }}
-            styles={{ backgroundColor: { 'accentColor': { value: theme.accentColor } } }} />
-          <motion.div className='absolute bottom-0 right-0 h-8 w-12 rounded-full bg-accentColor/30' animate={{ x: [0, -100, -200] }} transition={{ duration: 3, repeat: Infinity }}
-            styles={{ backgroundColor: { 'accentColor': { value: theme.accentColor } } }} />
-        </div>
 
-        {/* Profile image with interactive glow */}
-        <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, ease: 'spring', stiffness: 180 }}
-          className='border-[8px] border-gradient-to-r from-amber-500/20 to-purple-500/20 model-minimal'
+      {/* Glowing Orbs */}
+      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
+
+      {/* Main Content */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="max-w-sm w-full mx-auto relative z-10"
+      >
+        {/* Profile Card */}
+        <motion.div 
+          className="rounded-3xl p-8 backdrop-blur-2xl bg-white/5 border border-white/10 shadow-2xl"
+          style={{ 
+            backgroundColor: "rgba(0,0,0,0.6)",
+            borderColor: `${theme.accentColor}20`
+          }}
         >
-          <img 
-            src={profile.avatar || 'https://i.pravatar.cc/150?u=gamer'} 
-            alt={profile.displayName}
-            className='w-36 h-36 rounded-full mx-auto object-cover border-[8px] border-purple-500/30 shadow-[0_8px_30px_rgba(168,85,247,0.4)] transform-gpu hover:shadow-[0_8px_40px_rgba(168,85,247,0.6)] hover:scale-105 transition-transform duration-300 object-cover'
-            style={{ opacity: 0.95 }}
-          />
-        </motion.div>
-
-        {/* Name and bio */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }} className='flex flex-col items-center mb-3'>
-          <h1 
-            className='text-3xl md:text-4xl font-bold tracking-tight text-white font-monospace mx-1'
-            style={{ background: 'linear-gradient(90deg, white 0%, transparent 60%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+          {/* Avatar */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 0.7, type: "spring", stiffness: 200 }}
+            className="relative w-32 h-32 mx-auto mb-6"
           >
-            {profile.displayName.toUpperCase()}
-          </h1>
-          <p 
-            className='text-lg md:text-xl text-purple-300 mt-1 max-w-md text-center font-medium' 
-            style={{ letterSpacing: '0.5px' }}
-          >
-            {profile.bio || 'Digital creator'}
-          </p>
-        </motion.div>
+            <img
+              src={profile.avatar || "https://via.placeholder.com/150"}
+              alt={profile.displayName}
+              className="w-32 h-32 rounded-full object-cover border-4 border-purple-500/30 shadow-xl"
+              style={{ 
+                backgroundColor: theme.accentColor || "#a855f7",
+                borderColor: theme.accentColor || "#a855f7"
+              }}
+            />
+            <div className="absolute -inset-2 rounded-full border-2 border-purple-400/30 animate-pulse" />
+          </motion.div>
 
-        {/* Social links - minimalist custom buttons */}
-        <div className='mt-10 flex justify-center space-x-12'>
-          {profile.socialLinks.map((link) => (
-            <motion.a
-              key={link.url}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className='flex items-center justify-center gap-3 rounded-xl px-5 py-2.5 text-sm font-medium text-purple-400 backdrop-filter: blur(4px) transition-all transform-gpu hover:transform translateY(-2) hover:scale-102 duration-300 snapshot border-[1px] border-purple-500/30'
-              style={{
-                backgroundColor: theme.accentColor ? `rgba(${hexToRgb(theme.accentColor)}, 0.15)` : 'rgba(255,255,255,0.05)',
-                borderColor: theme.accentColor || '#a855f7',
-                color: theme.accentColor || '#a855f7',
-              }}
-              style={{ textShadow: '0 0 10px rgba(168,85,247,0.1)' }}
-              whileHover={(e) => {
-                e.preventDefault();
-                e.currentTarget.style.transform = 'translateY(-2) scale(1.02)';
-              }}
+          {/* Name & Bio */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center mb-8"
+          >
+            <h1 
+              className="text-3xl md:text-4xl font-black mb-2 tracking-tight"
+              style={{ color: theme.textColor || "#fff" }}
             >
-              <i 
-                className={`fab ${link.icon.replace('fa-', '')}`} 
-                style={{ 
-                  fontSize: '1.1rem', 
-                  filter: 'drop-shadow(0 0 8px rgba(168,85,247,0.35))',
-                  transition: 'filter 0.3s ease'
-                }}
-                whileHover={(e) => {
-                  e.currentTarget.style.filter = 'drop-shadow(0 0 15px rgba(168,85,247,0.6))';
+              {profile.displayName}
+            </h1>
+            <p 
+              className="text-white/60 text-sm md:text-base leading-relaxed"
+              style={{ color: `${theme.textColor}80` }}
+            >
+              {profile.bio || "Digital creator"}
+            </p>
+          </motion.div>
+
+          {/* Social Links */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="space-y-3"
+          >
+            {profile.socialLinks.map((link, idx) => (
+              <motion.a
+                key={idx}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.5 + idx * 0.08 }}
+                whileHover={{ scale: 1.02, x: 5 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center gap-4 w-full px-5 py-3.5 rounded-2xl bg-white/8 hover:bg-white/12 transition-all duration-300 backdrop-blur-md border border-white/10 group"
+                style={{
+                  backgroundColor: `${theme.accentColor}10`,
+                  borderColor: `${theme.accentColor}20`
                 }}
               >
-                {link.icon}
-              </i>
-              <span className='transition-all duration-300' style={{ textShadow: '0 0 5px rgba(255,255,255,0.2)' }}>
-                {link.name}
-              </span>
-            </motion.a>
-          ))}
-        </div>
+                <i 
+                  className={`fab ${link.icon.replace("fa-", "")} text-xl`}
+                  style={{ color: link.color || COLORS[link.name] || "#fff" }}
+                />
+                <span className="flex-1 text-left font-medium" style={{ color: theme.textColor || "#fff" }}>
+                  {link.name}
+                </span>
+                <svg 
+                  className="w-4 h-4 text-white/40 group-hover:text-white/80 transition-colors" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </motion.a>
+            ))}
+          </motion.div>
 
-        {/* Stats section */}
-        <div className='mt-15 flex flex-col items-center space-y-4' animated-variant='fadeIn'>
-          <div className='relative w-full bg-white/5 px-6 py-4 rounded-2xl backdrop-blur-lg border-[1px] border-white/10 animatedvariant='glow'</div>
-          <div className='flex items-center gap-3'>
-            <div className='flex items-center gap-2'>👁️</div>
-            <div className='flex flex-col'>
-              <div className='text-xs text-white/60 font-monospace tracking-wide'>Profile Views</div>
-              <motion.h2 
-                className='text-white font-monospace text-xl leading-none'
-                style={{ background: 'linear-gradient(90deg, white 0%, transparent 60%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
-              >
-                {views.toLocaleString()}
-              </motion.h2>
-            </div>
-          </div>
-        </div>
-
-        {/* Action buttons */}
-        <div className='mt-12 flex flex-col sm:flex-row justify-center gap-6' className='pointer-events-none'>
+          {/* Stats */}
           <motion.div
-            className='flex flex-col items-center justify-center rounded-xl bg-purple-600/30 px-8 py-4 shadow-sm hover:shadow-xl transition-all transform-gpu destroy-hover hover:scale-105'
-            style={{ backdropFilter: 'blur(12px)' }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="flex items-center justify-center gap-2 mt-8 px-5 py-2.5 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10"
           >
-            <span className='text-white text-purple-100 text-sm font-medium'>Create Profile</span>
-          </div>
-          <motion.div
-            className='flex flex-col items-center justify-center rounded-xl bg-white/15 px-8 py-4 shadow-sm hover:shadow-xl transition-all transform-gpu destroy-hover hover:scale-105'
-            style={{ backdropFilter: 'blur(12px)' }}
-          >
-            <span className='text-white text-white/80 text-sm font-medium'>Messages Asking For Invites</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Optional CRT scan effect overlay */}
-      <div className='fixed inset-0 pointer-events-none opacity-5 animate-rainbow-scanlines' />
+            <svg className="w-4 h-4 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C7.75 5.907 16.25 5.907 21.542 12" />
+            </svg>
+            <span className="text-sm text-white/70">{views.toLocaleString()} views</span>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

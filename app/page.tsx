@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 
-const MOBILE_BREAKPOINT = 768;
-
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const mouseX = useMotionValue(0);

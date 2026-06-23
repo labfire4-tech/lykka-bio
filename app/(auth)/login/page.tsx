@@ -1,98 +1,249 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
+import { useState } from 'react';
+import { motion, useTransition } from 'framer-motion';
+import Link from 'next/link';
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: false
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  
+  const [transition] = useTransition({
+    initial: { y: 20, opacity: 0 },
+    animate: { y: 0, opacity: 1 },
+    exit: { y: -20, opacity: 0 }
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError("");
-
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    
     try {
-      // Network check
-      await fetch("/api/auth");
-      localStorage.setItem("lykka-user", JSON.stringify({ username: formData.username, loggedIn: true }));
-      window.location.href = "/dashboard";
-    } catch {
-      setError("Connection failed. Please try again.");
-      setIsLoading(false);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      setSuccess('Login successful! Redirecting...');
+      
+      setTimeout(() => {
+        setLoading(false);
+        // In real app: router.push('/dashboard');
+      }, 1500);
+    } catch (err: any) {
+      setError(err.message || 'An error occurred');
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setSuccess('Google sign-in successful!');
+      setLoading(false);
+    } catch (err) {
+      setError('Google sign-in failed');
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
+      {/* Animated background elements */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-600/10 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-[64px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-pink-500/5 rounded-full blur-[64px]" />
+      </div>
+      
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="w-full max-w-[440px] space-y-8"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileHover={{ scale: 1.02 }}
+        className="relative w-full max-w-md"
       >
-        <div className="flex justify-center">
-          <h1 className="text-4xl font-black tracking-tight">LYKKA<span className="text-purple-500">.</span>BIO</h1>
-        </div>
-
-        <div className="space-y-2 text-center">
-          <h2 className="text-[22px] font-black">Connectez-vous</h2>
-          <p className="text-sm text-white/50">Partage tes meilleurs liens au même endroit.</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-xs text-white/60">Nom d'utilisateur</label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeWidth="2" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/></svg>
-              </span>
-              <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                placeholder="guns.lol/nom d'utilisateur"
-                className="w-full pl-11 pr-4 py-3.5 bg-white/[0.04] border border-white/10 rounded-2xl text-sm focus:outline-none focus:border-purple-500/40 transition-all placeholder:text-white/25"
-                required
-              />
+        {/* Glass container */}
+        <div 
+          className="rounded-3xl p-8 backdrop-blur-2xl border border-white/10"
+          style={{
+            background: 'rgba(255, 255, 255, 0.025)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), inset 0 0 80px rgba(168, 85, 247, 0.1)'
+          }}
+        >
+          {/* Header */}
+          <div className="text-center mb-8">
+            <motion.h1 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500"
+            >
+              Welcome Back
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-white/60"
+            >
+              Sign in to continue to LYKKA.bio
+            </motion.p>
+          </div>
+          
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-3">
+              <label className="block text-sm font-medium text-white/60">Email Address</label>
+              <div className="relative">
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm placeholder-white/30 focus:outline-none focus:border-purple-500/40 focus:bg-white/10 transition-all duration-300"
+                  placeholder="you@example.com"
+                  required
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <path d="M2 26h20" />
+                  </svg>
+                </div>
+              </div>
             </div>
+            
+            <div className="space-y-3">
+              <label className="block text-sm font-medium text-white/60">Password</label>
+              <div className="relative">
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm placeholder-white/30 focus:outline-none focus:border-purple-500/40 focus:bg-white/10 transition-all duration-300"
+                  placeholder="Enter your password"
+                  required
+                  minLength="6"
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v4m0 4h.01" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.rememberMe}
+                  onChange={(e) => setFormData({...formData, rememberMe: e.target.checked})}
+                  className="w-4 h-4 rounded border-white/20 border-white/20 bg-white/5 text-purple-600 focus:ring-purple-500 focus:ring-2"
+                />
+                <span className="text-sm text-white/60">Remember me</span>
+              </label>
+              <Link href="/" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
+                Forgot password?
+              </Link>
+            </div>
+            
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="px-4 py-3 bg-red-500/20 text-red-400 rounded-xl text-sm font-medium border border-red-500/30"
+              >
+                {error}
+              </motion.div>
+            )}
+            
+            {success && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="px-4 py-3 bg-green-500/20 text-green-400 rounded-xl text-sm font-medium border border-green-500/30"
+              >
+                {success}
+              </motion.div>
+            )}
+            
+            <motion.button
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              disabled={loading}
+              type="submit"
+              className={`w-full py-4 px-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-xl shadow-purple-900/50 ${
+                loading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+              {loading ? 'Processing...' : 'Sign In'}
+            </motion.button>
+          </form>
+          
+          {/* Divider */}
+          <div className="my-8 flex items-center">
+            <div className="flex-1 border-t border-white/10" />
+            <span className="px-4 text-sm text-white/40">OR</span>
+            <div className="flex-1 border-t border-white/10" />
           </div>
-
-          <div className="space-y-1.5">
-            <label className="text-xs text-white/60">Mot de passe</label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              placeholder="••••••••"
-              className="w-full px-4 py-3.5 bg-white/[0.04] border border-white/10 rounded-2xl text-sm focus:outline-none focus:border-purple-500/40 transition-all placeholder:text-white/25"
-              required
-            />
+          
+          {/* Social login */}
+          <div className="space-y-3">
+            <button
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+              className={`w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-medium transition-all duration-300 flex items-center justify-center gap-3 ${
+                loading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+              <div className="flex-1">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 8v4m0 4h.01" />
+                </svg>
+                <span className="ml-2">Continue with Google</span>
+              </div>
+            </button>
+            
+            <button
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+              className={`w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-medium transition-all duration-300 flex items-center justify-center gap-3 ${
+                loading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+              <div className="flex-1">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2C6.5 2 2 6.5 2 12c0 5.5 4.5 10 10 10s10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                </svg>
+                <span className="ml-2">Continue with Apple</span>
+              </div>
+            </button>
           </div>
-
-          {error && (
-            <p className="text-xs text-red-400 text-center">{error}</p>
-          )}
-
-          <motion.button
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-4 bg-purple-700 hover:bg-purple-600 disabled:bg-purple-900/50 text-white font-bold rounded-2xl transition-all"
-          >
-            {isLoading ? "Connexion..." : "Continuer"}
-          </motion.button>
-        </form>
-
-        <p className="text-center text-sm text-white/40">
-          Tu as déjà un compte ?{" "}
-          <Link href="/signup" className="text-purple-400 hover:text-purple-300 font-medium transition-colors">
-            Créer un compte
-          </Link>
-        </p>
+          
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-sm text-white/40">
+              Don't have an account?
+              <Link
+                href="/signup"
+                className="ml-2 text-purple-400 hover:text-purple-300 font-medium transition-colors"
+              >
+                Sign Up
+              </Link>
+            </p>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
