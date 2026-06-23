@@ -39,7 +39,6 @@ export default function ProfileView() {
       const saved = localStorage.getItem("lykka-profile");
       if (saved) setProfile(JSON.parse(saved));
     }
-
     const target = pathname === "/demo" ? "demo" : JSON.parse(localStorage.getItem("lykka-profile") || "{}")?.username;
     if (target) {
       fetch(`https://api.counterapi.dev/v1/lykka-bio/${target}/up`)
@@ -76,42 +75,40 @@ export default function ProfileView() {
         className="flex flex-col items-center gap-10 max-w-sm w-full"
       >
         <motion.img
-          initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+          initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           transition={{ duration: 0.7, type: "spring" }}
           whileHover={{ scale: 1.1, rotate: 3 }}
           src={profile.avatar || "https://via.placeholder.com/150"}
           alt={profile.displayName}
-          className={`w-28 h-28 ${theme.rounded === "full" ? "rounded-full" : theme.rounded === "lg" ? "rounded-xl" : "rounded-lg"} border-2 object-cover`}
-          style={{ borderColor: theme.accentColor, boxShadow: `0 0 40px ${theme.accentColor}30` }}
+          className={`w-28 h-28 ${theme.rounded === "full" ? "rounded-full" : "rounded-xl"} border-2 object-cover pulse-glow`}
+          style={{ borderColor: theme.accentColor }}
         />
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-center">
-          <h1 className="text-4xl md:text-5xl font-black mb-2">{profile.displayName}</h1>
+          <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+            className="text-4xl md:text-5xl font-black mb-2">
+            {profile.displayName}
+          </motion.h1>
           {profile.bio && <p className="text-sm opacity-70 leading-relaxed">{profile.bio}</p>}
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap gap-4 justify-center">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+          className="flex flex-wrap gap-4 justify-center">
           {profile.socialLinks.map((link, idx) => (
-            <motion.a
-              key={idx}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4 + idx * 0.1, type: "spring" }}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.2, y: -8, boxShadow: `0 15px 35px ${link.color || COLORS[link.name] || "#fff"}50` }}
+            <motion.a key={idx} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 + idx * 0.1, type: "spring" }}
+              href={link.url} target="_blank" rel="noopener noreferrer"
+              whileHover={{ scale: 1.25, y: -8, boxShadow: `0 15px 35px ${link.color || COLORS[link.name] || "#fff"}50` }}
               whileTap={{ scale: 0.9 }}
-              className="w-14 h-14 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/10"
-              style={{ color: link.color || COLORS[link.name] || theme.textColor }}
-            >
+              className="w-14 h-14 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/10">
               <i className={`fab ${link.icon.replace("fa-", "")} text-xl`} />
             </motion.a>
           ))}
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 }} className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-5 py-2.5 rounded-full text-sm">
+        <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.7 }}
+          className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-5 py-2.5 rounded-full text-sm">
           <i className="fas fa-eye text-xs opacity-60" />
           <span>{views.toLocaleString()} views</span>
         </motion.div>

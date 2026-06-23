@@ -1,9 +1,10 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   :root {
     --font-inter: 'Inter', sans-serif;
-    --font-jetbrains: 'JetBrains Mono', monospace;
   }
 
   body {
@@ -12,34 +13,35 @@
     font-family: var(--font-inter);
     -webkit-font-smoothing: antialiased;
   }
-
-  body {
-    cursor: none;
-  }
-  
-  a, button, input, textarea, select {
-    cursor: none !important;
-  }
 }
 
 @layer utilities {
   .glass {
-    background: rgba(10, 10, 10, 0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(15, 15, 15, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
-  
-  .text-glow {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 30px rgba(255, 255, 255, 0.15);
-  }
-  
-  .neon-glow {
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), 0 0 40px rgba(0, 255, 255, 0.15);
-  }
-}
 
-@media (max-width: 768px) {
-  .glass {
-    background: rgba(20, 20, 20, 0.9);
+  .text-gradient {
+    background: linear-gradient(90deg, #fff, #888, #fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    animation: shine 3s linear infinite;
+  }
+
+  @keyframes shine {
+    to { background-position: 200% center; }
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse-glow {
+    from { box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); }
+    to { box-shadow: 0 0 40px rgba(255, 255, 255, 0.3); }
   }
 }
