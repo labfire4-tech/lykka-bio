@@ -1,11 +1,4 @@
-[build]
-builder = "nixpacks"
-
-[build.nixpacks]
-nodeVersion = "20"
-
 [deploy]
-startCommand = "next start -H 0.0.0.0 -p $PORT"
 healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
