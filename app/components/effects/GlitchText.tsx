@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 interface GlitchTextProps {
   children: string;
-  intensity?: 'low' | 'medium' | 'high';
+  intensity?: 'low' | 'medium' | 'high' | 'none';
   color?: string;
   className?: string;
 }
@@ -58,17 +59,16 @@ export function GlitchText({
           }}
           animate={{ 
             opacity: [0, 0.6, 0],
-            x: [0, '10px', '0px'],
-            y: [0, '-10px', '0px'],
-            scale: [1, 1.2, 1]
+            x: [0, 2, 0],
+            y: [0, -2, 0],
+            scale: [1, 1.1, 1]
           }}
           transition={{ 
-            duration: [0.05, 0.1, 0.05],
-            }}
-         
-          duration: '
-
- {' '});}>
+            duration: 0.2,
+            repeat: Infinity,
+            repeatDelay: 2
+          }}
+        >
         </motion.div>
       )}
     </span>

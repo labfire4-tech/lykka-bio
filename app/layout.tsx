@@ -25,12 +25,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={inter.className} backgroundColor="#000">
+      <body className={inter.className} style={{ backgroundColor: '#000' }}>
         {/* Global CRT effect */}
         <CRTOverlay intensity={0.1} scanlineOpacity={0.08} />
         
         {/* Global particle effects */}
-        <div className="pointer-effects-none">
+        <div className="pointer-events-none">
           <ParticleEffect type="stars" count={40} size={1} speed={0.3} opacity={0.2} className="z-[9994]" />
           <ParticleEffect type="pulse" count={20} size={2.5} speed={0.8} opacity={0.15} color={['#a855f7', '#ec4899']} className="z-[9994]" />
         </div>
@@ -41,11 +41,11 @@ export default function RootLayout({
         {/* Page content */}
         {children}
         
-        {/* Crisp chat widget (optional customer support) */}
-        <Crisp 
-          websiteId="https://lykka-bio.crisp.chat/" 
-          enabled={typeof window !== 'undefined'} 
-        />
+        {typeof window !== 'undefined' && (
+          <Crisp 
+            websiteId="https://lykka-bio.crisp.chat/" 
+          />
+        )}
       </body>
     </html>
   );

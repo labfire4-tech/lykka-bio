@@ -34,16 +34,15 @@ export function LivePreview({ profileState, isVisible, onClose }: LivePreviewPro
     };
   }, [onClose]);
   
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
   // Debounced state update to parent
   const debouncedUpdate = useCallback((key: string, value: any) => {
-    // Clear existing timeout
-    if (debouncedUpdate.timeoutId) {
-      clearTimeout(debouncedUpdate.timeoutId);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
     
-    debouncedUpdate.timeoutId = setTimeout(() => {
-      // Update parent state (this would normally use a callback or context)
-      // For demo purposes, we'll trigger a custom event
+    timeoutRef.current = setTimeout(() => {
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('profile-update', {
           detail: { [key]: value }
@@ -51,11 +50,6 @@ export function LivePreview({ profileState, isVisible, onClose }: LivePreviewPro
       }
     }, 150);
   }, []);
-  
-  // Attach the debounce function property
-  if (!debouncedUpdate.hasOwnProperty('timeoutId')) {
-    (debouncedUpdate as any).timeoutId = null;
-  }
   
   return (
     <AnimatePresence>

@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 interface GlassPanelProps {
   title?: string;
@@ -73,7 +74,6 @@ export function GlassPanel({
       onMouseLeave={() => setIsHovered(false)}
       onMouseDown={() => setIsPressed(true)}
       onMouseUp={() => setIsPressed(false)}
-      onMouseLeave={() => setIsPressed(false)}
     >
 {/* Animated border gradient */}
        {animatedBorder && (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
@@ -10,7 +10,7 @@ import { ParticleEffect } from '@/app/components/effects/ParticleEffect';
 import { GlassPanel } from '@/app/components/effects/GlassPanel';
 
 export default function DashboardPage() {
-  const [userStats] = useState({
+  const [userStats, setUserStats] = useState({
     totalViews: 15847,
     profileClicks: 8932,
     recentGrowth: 23.5,
@@ -46,12 +46,6 @@ export default function DashboardPage() {
     ]
   });
   
-  const [transition] = useTransition({
-    initial: { y: 20, opacity: 0 },
-    animate: { y: 0, opacity: 1 },
-    exit: { y: -20, opacity: 0 }
-  });
-
   // Simulate real-time data updates
   useEffect(() => {
     const interval = setInterval(() => {
@@ -84,7 +78,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-black text-white relative">
       {/* Animated background particles */}
-      <div className="absolute inset-0 pointer-effects-none">
+      <div className="absolute inset-0 pointer-events-none">
         <ParticleEffect type="stars" count={30} size={1.5} speed={0.5} opacity={0.3} />
         <ParticleEffect type="pulse" count={15} size={3} speed={1} opacity={0.2} color={['#a855f7', '#ec4899']} />
       </div>
@@ -136,7 +130,6 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6 }}
-            asChild
           >
             <StatCard 
               title="Total Views"
@@ -152,7 +145,6 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            asChild
           >
             <StatCard 
               title="Profile Clicks"
@@ -168,7 +160,6 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            asChild
           >
             <StatCard 
               title="Growth Rate"
@@ -184,7 +175,6 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            asChild
           >
             <StatCard 
               title="Followers"
@@ -204,7 +194,6 @@ export default function DashboardPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1, duration: 0.6 }}
-            asChild
           >
             <GlassPanel title="Analytics Overview" subtitle="Last 30 days" glow>
               <div className="space-y-4">
@@ -273,7 +262,6 @@ export default function DashboardPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            asChild
           >
             <GlassPanel title="Recent Activity">
               <div className="space-y-4">
@@ -321,7 +309,6 @@ export default function DashboardPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            asChild
           >
             <div className="space-y-4">
               <h2 className="text-xl font-bold mb-4">Live Preview</h2>

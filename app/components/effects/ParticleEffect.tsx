@@ -22,7 +22,7 @@ export function ParticleEffect({
   className = ''
 }: ParticleProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -161,16 +161,14 @@ case 'rainbow':
         }
       });
       
-      animationRef.requestId = requestAnimationFrame(animate);
+      animationRef.current = requestAnimationFrame(animate);
     };
     
     animate();
     
     return () => {
-      window.removeEventListener('resize', resize);
-      if (animationRef.requestId) {
-        cancelAnimationFrame(animationRef.requestId);
-      }
+      window.removeEventListener("resize", resize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
   }, [type, count, size, speed, opacity, color]);
   
