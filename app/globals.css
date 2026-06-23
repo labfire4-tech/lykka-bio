@@ -2,11 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --font-inter: 'Inter', sans-serif;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
+@layer base {
   * {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
@@ -32,7 +30,7 @@
   body {
     background-color: #000;
     color: #fff;
-    font-family: var(--font-inter);
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
