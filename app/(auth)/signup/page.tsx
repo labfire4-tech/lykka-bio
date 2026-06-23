@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { motion, useTransition } from 'framer-motion';
+import { useState, useTransition } from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 export default function SignUpPage() {

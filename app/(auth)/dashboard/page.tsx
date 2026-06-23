@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { motion, useTransition, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useTransition } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
-import { StatCard } from '@/app/components/ui/StatCard';
+
 import LivePreview from '@/app/components/effects/LivePreview';
 import ParticleEffect from '@/app/components/effects/ParticleEffect';
 import { GlassPanel } from '@/app/components/effects/GlassPanel';

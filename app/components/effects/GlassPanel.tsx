@@ -75,22 +75,21 @@ export function GlassPanel({
       onMouseUp={() => setIsPressed(false)}
       onMouseLeave={() => setIsPressed(false)}
     >
-      {/* Animated border gradient */}
-      {animatedBorder && (
-        <div 
-          <div className="absolute inset-0 rounded-[var(--radius)] p-[2px] pointer-events-none" style={{
-            background: 'linear-gradient(45deg, #a855f7, #ec4899, #f97316, #10b981, #06b6d4, #8b5cf6)',
-            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-            WebkitMaskComposite: 'xor',
-            maskComposite: 'exclude',
-            pointerEvents: 'none'
-          }}>
-            <div className="absolute inset-0 rounded-[var(--radius)]" style={{ 
-              background: 'rgba(0,0,0,0.85)', 
-              pointerEvents: 'none' 
-            }} />
-          </div>
-        )}
+{/* Animated border gradient */}
+       {animatedBorder && (
+         <div className="absolute inset-0 rounded-[var(--radius)] p-[2px] pointer-events-none" style={{
+           background: 'linear-gradient(45deg, #a855f7, #ec4899, #f97316, #10b981, #06b6d4, #8b5cf6)',
+           WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+           WebkitMaskComposite: 'xor',
+           maskComposite: 'exclude',
+           pointerEvents: 'none'
+         }}>
+           <div className="absolute inset-0 rounded-[var(--radius)]" style={{ 
+             background: 'rgba(0,0,0,0.85)', 
+             pointerEvents: 'none' 
+           }} />
+         </div>
+       )}
       
       {/* Video background */}
       {videoSrc && (

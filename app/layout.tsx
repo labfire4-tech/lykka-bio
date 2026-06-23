@@ -1,8 +1,5 @@
-'use client';
-
 import './globals.css';
 import { Inter } from 'next/font/google';
-import { MotionPlugin } from 'framer-motion';
 import { Crisp } from 'crisp-chat';
 
 import { CustomCursor } from '@/app/components/effects/CustomCursor';
@@ -33,7 +30,7 @@ export default function RootLayout({
         <CRTOverlay intensity={0.1} scanlineOpacity={0.08} />
         
         {/* Global particle effects */}
-        <div className="pointer-events-none">
+        <div className="pointer-effects-none">
           <ParticleEffect type="stars" count={40} size={1} speed={0.3} opacity={0.2} className="z-[9994]" />
           <ParticleEffect type="pulse" count={20} size={2.5} speed={0.8} opacity={0.15} color={['#a855f7', '#ec4899']} className="z-[9994]" />
         </div>
@@ -43,9 +40,6 @@ export default function RootLayout({
         
         {/* Page content */}
         {children}
-        
-        {/* Motion plugin for framer motion */}
-        <MotionPlugin />
         
         {/* Crisp chat widget (optional customer support) */}
         <Crisp 

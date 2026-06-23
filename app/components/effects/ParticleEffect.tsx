@@ -133,25 +133,25 @@ export function ParticleEffect({
             ctx.fillText(char, p.x, p.y);
             break;
             
-          case 'rainbow':
-            // Create a gradient stroke for text effect
-            const gradient = ctx.createLinearGradient(
-              p.x - p.radius, 
-              p.y, 
-              p.x + p.radius, 
-              p.y
-            );
-            gradient.addColorStop(0, '#ff0000');
-            gradient.addColorStop(0.2, '#ff7f00');
-            gradient.addColorStop(0.4, '#ffff00');
-            gradient.addColorStop(0.6, '#00ff00');
-            gradient.addColorStop(0.8, '#0000ff');
-            gradient.addColorStop(1, '#4b0082');
-            ctx.fillStyle = gradient;
-            ctx.font = `${p.radius * 1.5}px monospace`;
-            const char = '★';
-            ctx.fillText(char, p.x, p.y);
-            break;
+case 'rainbow':
+             // Create a gradient stroke for text effect
+             const gradient = ctx.createLinearGradient(
+               p.x - p.radius, 
+               p.y, 
+               p.x + p.radius, 
+               p.y
+             );
+             gradient.addColorStop(0, '#ff0000');
+             gradient.addColorStop(0.2, '#ff7f00');
+             gradient.addColorStop(0.4, '#ffff00');
+             gradient.addColorStop(0.6, '#00ff00');
+             gradient.addColorStop(0.8, '#0000ff');
+             gradient.addColorStop(1, '#4b0082');
+             ctx.fillStyle = gradient;
+             ctx.font = `${p.radius * 1.5}px monospace`;
+             const starChar = '★';
+             ctx.fillText(starChar, p.x, p.y);
+             break;
             
           case 'pulse':
             ctx.beginPath();
