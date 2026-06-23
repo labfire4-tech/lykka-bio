@@ -2,7 +2,13 @@
 
 import { useEffect, useRef } from "react";
 
-export function CRTOverlay({ intensity = 0.15, scanlineIntensity = 0.08 }: { intensity?: number; scanlineIntensity?: number }) {
+export function CRTOverlay({ 
+  intensity = 0.15, 
+  scanlineOpacity = 0.15 
+}: { 
+  intensity?: number; 
+  scanlineOpacity?: number;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
 
@@ -23,52 +29,38 @@ export function CRTOverlay({ intensity = 0.15, scanlineIntensity = 0.08 }: { int
     let time = 0;
     const animate = () => {
       time += 0.016;
-      if (!ctx) return;
+      const width = canvas.width;
+      const height = canvas.height;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, width, height);
 
       // Scanlines
-      ctx.globalAlpha = scanlineIntensity;
+      ctx.globalAlpha = scanlineOpacity;
       ctx.fillStyle = "#000";
-      for (let y = 0; y < canvas.height; y += 4) {
-        ctx.fillRect(0, y, canvas.width, 2);
+      for (let y = 0; y < height; y += 4) {
+        ctx.fillRect(0, y, width, 2);
       }
 
-      // Vignette
-      const vignette = ctx.createRadialGradient(
-        canvas.width / 2,
-        canvas.height / 2,
-        0,
-        canvas.width / 2,
-        canvas.height / 2,
-        Math.max(canvas.width, canvas.height) / 1.5
-      );
-      vignette.addColorStop(0, "rgba(0,0,0,0)");
-      vignette.addColorStop(1, "rgba(0,0,0,0.4)");
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = vignette;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Subtle noise
+      // Subtle noise overlay
       ctx.globalAlpha = intensity * 0.3;
       for (let i = 0; i < 300; i++) {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
+        const x = Math.random() * width;
+        const y = Math.random() * height;
         const w = Math.random() * 2;
         const h = Math.random() * 2;
         ctx.fillStyle = Math.random() > 0.5 ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
         ctx.fillRect(x, y, w, h);
       }
 
-      // Horizontal line jitter (CRT effect)
+      // Horizontal jitter lines (CRT effect)
       ctx.globalAlpha = 0.02;
       ctx.strokeStyle = "#fff";
       ctx.lineWidth = 1;
       for (let i = 0; i < 5; i++) {
-        const y = (time * 100 + i * 200) % canvas.height;
+        const y = (time * 100 + i * 200) % height;
         ctx.beginPath();
         ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y + Math.sin(time * 10 + i) * 2);
+        ctx.lineTo(width, y + Math.sin(time * 10 + i) * 2);
         ctx.stroke();
       }
 
@@ -81,7 +73,7 @@ export function CRTOverlay({ intensity = 0.15, scanlineIntensity = 0.08 }: { int
       window.removeEventListener("resize", resize);
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [intensity, scanlineIntensity]);
+  }, [intensity, scanlineOpacity]);
 
   return (
     <canvas
