@@ -1,131 +1,69 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
 import Link from "next/link";
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 
 export default function HomePage() {
-  const [entered, setEntered] = useState(false);
-  const [showCursor, setShowCursor] = useState(false);
-  const cursorX = useMotionValue(0);
-  const cursorY = useMotionValue(0);
-  const springConfig = { stiffness: 200, damping: 30 };
-  const outlineX = useSpring(cursorX, springConfig);
-  const outlineY = useSpring(cursorY, springConfig);
-
-  useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    setShowCursor(!isMobile);
-  }, []);
-
-  useEffect(() => {
-    if (!showCursor) return;
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-    };
-    
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [showCursor]);
-
-  const handleEnter = () => {
-    setEntered(true);
-  };
-
-  if (!entered) {
-    return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center z-50 cursor-none">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="absolute w-8 h-8 bg-white rounded-full pointer-events-none mix-blend-difference"
-          style={{ 
-            x: cursorX, 
-            y: cursorY, 
-            translateX: "-50%", 
-            translateY: "-50%" 
-          }}
-        />
-        
-        <motion.div
-          initial={{ opacity: 0.3 }}
-          animate={{ opacity: 1 }}
-          transition={{ repeat: Infinity, duration: 2, repeatType: "reverse" }}
-          className="text-white/80 text-lg font-light tracking-[0.3em] uppercase cursor-none"
-          onClick={handleEnter}
-          style={{ cursor: "none" }}
-        >
-          Click to Enter
-        </motion.div>
-      </div>
-    );
-  }
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative overflow-hidden">
-      {showCursor && (
-        <>
-          <motion.div
-            className="fixed w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
-            style={{ 
-              x: cursorX, 
-              y: cursorY, 
-              translateX: "-50%", 
-              translateY: "-50%" 
-            }}
-          />
-          <motion.div
-            className="fixed w-10 h-10 border border-white/30 rounded-full pointer-events-none z-[9998]"
-            style={{ 
-              x: outlineX, 
-              y: outlineY,
-              translateX: "-50%", 
-              translateY: "-50%" 
-            }}
-          />
-        </>
-      )}
+      <div 
+        className="absolute inset-0 opacity-10"
+        style={{
+          background: useMotionTemplate`radial-gradient(800px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.2), transparent 40%)`
+        }}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          mouseX.set(e.clientX - rect.left);
+          mouseY.set(e.clientY - rect.top);
+        }}
+      />
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        className="w-full max-w-4xl text-center"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1, type: "spring", stiffness: 100 }}
+        className="w-full max-w-2xl text-center relative z-10 space-y-8"
       >
-        <h1 className="text-8xl md:text-9xl font-black tracking-tighter mb-6">
-          <span className="block">LYKKA</span>
-          <span className="block text-white/70 text-7xl md:text-8xl">BIO</span>
-        </h1>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <h1 className="text-7xl md:text-8xl font-black tracking-tight mb-4">
+            <span className="block">LYKKA</span>
+            <span className="block text-white/60 text-6xl md:text-7xl font-medium">BIO</span>
+          </h1>
+          <p className="text-base opacity-50 max-w-md mx-auto leading-relaxed">
+            Create beautiful link-in-bio pages that stand out
+          </p>
+        </motion.div>
 
-        <p className="max-w-md mx-auto text-lg opacity-60 mb-12">
-          Create your perfect link-in-bio page
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center pt-8"
+        >
           <Link
             href="/customize"
-            className="group relative px-10 py-3.5 bg-white text-black font-black rounded-full text-sm uppercase tracking-widest overflow-hidden"
+            className="group relative px-12 py-4 bg-white text-black font-black rounded-full text-sm uppercase tracking-widest overflow-hidden transition-all"
           >
-            <span className="relative z-10 transition-transform group-hover:translate-x-1">
-              Get Started
+            <span className="relative z-10 flex items-center gap-2 transition-transform group-hover:translate-x-1">
+              Create Profile →
             </span>
-            <motion.span
-              className="absolute inset-0 bg-gradient-to-r from-gray-100 via-white to-gray-100"
-              initial={{ x: "100%" }}
-              whileHover={{ x: "0%" }}
-              transition={{ duration: 0.4 }}
-            />
+            <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-200 to-white translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
           </Link>
 
           <Link
             href="/demo"
-            className="px-10 py-3.5 border border-white/20 rounded-full text-sm uppercase tracking-widest hover:bg-white/5 transition-all"
+            className="px-12 py-4 border border-white/20 rounded-full text-sm uppercase tracking-widest hover:bg-white/5 transition-all"
           >
-            Demo
+            See Demo
           </Link>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );
