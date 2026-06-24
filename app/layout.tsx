@@ -25,6 +25,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} scroll-smooth`}>
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+      </head>
       <body className="font-sans" style={{ backgroundColor: '#000' }}>
         {/* Subtle CRT scanline overlay */}
         <CRTOverlay intensity={0.05} scanlineOpacity={0.03} />

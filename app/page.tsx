@@ -299,27 +299,9 @@ export default function HomePage() {
       {/* ===== Stats ===== */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-          {stats.map((stat, i) => {
-            const [ref, inView] = useInView({ threshold: 0.3 });
-            return (
-              <motion.div
-                key={stat.label}
-                ref={ref}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: i * 0.1, type: "spring" }}
-                whileHover={{ y: -4, scale: 1.05 }}
-                className="text-center p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-purple-500/20 transition-all"
-              >
-                <stat.icon size={20} className="mx-auto mb-3 text-purple-400/60" />
-                <div className="text-3xl font-black mb-1">
-                  {inView && <AnimatedCounter value={stat.value} isFloat={stat.isFloat} />}
-                  {stat.suffix}
-                </div>
-                <div className="text-xs text-white/30">{stat.label}</div>
-              </motion.div>
-            );
-          })}
+          {stats.map((stat, i) => (
+            <StatCard key={stat.label} stat={stat} index={i} />
+          ))}
         </div>
       </section>
 
@@ -431,6 +413,27 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function StatCard({ stat, index }: { stat: typeof stats[number]; index: number }) {
+  const [ref, inView] = useInView({ threshold: 0.3 });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay: index * 0.1, type: "spring" }}
+      whileHover={{ y: -4, scale: 1.05 }}
+      className="text-center p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-purple-500/20 transition-all"
+    >
+      <stat.icon size={20} className="mx-auto mb-3 text-purple-400/60" />
+      <div className="text-3xl font-black mb-1">
+        {inView && <AnimatedCounter value={stat.value} isFloat={stat.isFloat} />}
+        {stat.suffix}
+      </div>
+      <div className="text-xs text-white/30">{stat.label}</div>
+    </motion.div>
   );
 }
 
