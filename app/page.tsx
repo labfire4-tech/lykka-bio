@@ -165,7 +165,7 @@ export default function HomePage() {
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
               </svg>
             </div>
-            <span className="text-sm font-black tracking-tight hidden sm:block">LYKKA<span className="text-purple-500">.bio</span></span>
+            <span className="text-sm font-black tracking-tight hidden sm:block">CURZED</span>
           </a>
 
           <div className="hidden md:flex items-center gap-1 px-2">
@@ -382,7 +382,7 @@ export default function HomePage() {
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                   </svg>
                 </div>
-                <span className="text-base font-black">LYKKA<span className="text-purple-500">.bio</span></span>
+                <span className="text-base font-black">CURZED</span>
               </div>
               <p className="text-xs text-white/30 leading-relaxed">The premium link-in-bio platform for creators.</p>
             </div>
@@ -402,7 +402,7 @@ export default function HomePage() {
             ))}
           </div>
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-white/25">© 2025 LYKKA.bio — All rights reserved</p>
+            <p className="text-xs text-white/25">© 2025 CURZED — All rights reserved</p>
             <div className="flex items-center gap-4">
               <a href="#" className="text-white/25 hover:text-white/50 transition-colors"><i className="fa-brands fa-discord" /></a>
               <a href="#" className="text-white/25 hover:text-white/50 transition-colors"><i className="fa-brands fa-twitter" /></a>

@@ -110,13 +110,13 @@ export default function ProfileView() {
 
   useEffect(() => {
     if (pathname === "/demo") { setProfile(DEMO_PROFILE); return; }
-    const saved = localStorage.getItem("lykka-profile");
+    const saved = localStorage.getItem("curzed-profile");
     if (saved) { try { const p = JSON.parse(saved); if (p.username) setProfile({ ...DEMO_PROFILE, ...p }); } catch {} }
   }, [pathname]);
 
   useEffect(() => {
     if (!profile?.username) return;
-    fetch(`https://api.counterapi.dev/v1/lykka-bio/${profile.username}/up`).then(r => r.json()).then(d => setViews(d.count || 0)).catch(() => setViews(0));
+    fetch(`https://api.counterapi.dev/v1/curzed-bio/${profile.username}/up`).then(r => r.json()).then(d => setViews(d.count || 0)).catch(() => setViews(0));
   }, [profile?.username]);
 
   const handleEnter = () => {
@@ -432,7 +432,7 @@ export default function ProfileView() {
           className="absolute bottom-6 right-6"
         >
           <a href="/" className="text-[10px] text-white/20 hover:text-white/40 transition-colors">
-            <span className="font-bold">LYKKA</span><span style={{ color: theme.accentColor }}>.</span>bio
+            <span className="font-bold">CURZED</span>
           </a>
         </motion.div>
       </div>

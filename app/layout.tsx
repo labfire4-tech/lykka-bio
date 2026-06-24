@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-grotesk' });
 
 export const metadata = {
-  title: 'LYKKA.bio — Premium Link-in-Bio Platform',
+  title: 'CURZED — Premium Link-in-Bio Platform',
   description: 'Create stunning, animated link-in-bio pages with premium customization, effects, and analytics.',
   icons: {
     icon: '/favicon.ico',

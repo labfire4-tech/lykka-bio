@@ -13,11 +13,31 @@ const ensureDb = () => {
 export async function POST(req: Request) {
   ensureDb();
   try {
-    const { username, email, password } = await req.json();
+    const body = await req.json();
+    const db: Record<string, any> = JSON.parse(fs.readFileSync(DB_PATH, "utf8"));
+
+    // Login action
+    if (body.action === "login") {
+      const { email, password } = body;
+      if (!email || !password) {
+        return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+      }
+      const userEntry = Object.values(db).find(
+        (u: any) => u.email === email && u.password === password
+      );
+      if (!userEntry) {
+        return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+      }
+      return NextResponse.json({
+        user: { username: userEntry.username, email: userEntry.email },
+      });
+    }
+
+    // Register (default)
+    const { username, email, password } = body;
     if (!username || !email || !password) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
-    const db: Record<string, any> = JSON.parse(fs.readFileSync(DB_PATH, "utf8"));
     if (db[username]) {
       return NextResponse.json({ error: "User already exists" }, { status: 409 });
     }
@@ -34,6 +54,9 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const username = searchParams.get("username");
   const db: Record<string, any> = JSON.parse(fs.readFileSync(DB_PATH, "utf8"));
-  if (username && db[username]) return NextResponse.json({ user: db[username] });
+  if (username && db[username]) {
+    const { password, ...userWithoutPassword } = db[username];
+    return NextResponse.json({ user: userWithoutPassword });
+  }
   return NextResponse.json({ error: "Not found" }, { status: 404 });
 }
